@@ -3,7 +3,17 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-  "scripts": {},
+  "scripts": {
+    "test": "playwright test",
+    "test:headed": "playwright test --headed",
+    "test:debug": "playwright test --debug",
+    "test:ui": "playwright test --ui",
+    "test:search": "playwright test tests/wattpad-search.spec.ts",
+    "test:search:headed": "playwright test tests/wattpad-search.spec.ts --headed",
+    "test:report": "playwright show-report",
+    "test:last-failed": "playwright test --last-failed",
+    "test:list": "playwright test --list"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
