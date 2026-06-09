@@ -12,14 +12,24 @@
     "test:search:headed": "playwright test tests/wattpad-search.spec.ts --headed",
     "test:report": "playwright show-report",
     "test:last-failed": "playwright test --last-failed",
-    "test:list": "playwright test --list"
+    "test:list": "playwright test --list",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "type": "commonjs",
+  "type": "module",
   "devDependencies": {
+    "@eslint/js": "^10.0.1",
     "@playwright/test": "^1.60.0",
-    "@types/node": "^25.9.1"
+    "@types/eslint__js": "^8.42.3",
+    "@types/node": "^25.9.1",
+    "eslint": "^10.4.1",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-playwright": "^2.10.4",
+    "prettier": "^3.8.3",
+    "typescript": "^6.0.3",
+    "typescript-eslint": "^8.60.1"
   }
 }

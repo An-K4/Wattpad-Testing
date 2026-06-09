@@ -8,9 +8,9 @@
 
 | Nhóm | File | TC | Kết quả |
 |---|---|---|---|
-| Tìm kiếm cơ bản | `wattpad-search.spec.ts` | TC01–TC07 | ✅ Pass |
-| Kết quả tìm kiếm | `wattpad-search-results.spec.ts` | TC08–TC15 | ✅ Pass |
-| Gợi ý tìm kiếm | `wattpad-search-suggestions.spec.ts` | TC16–TC18 | ✅ Pass |
+| Tìm kiếm cơ bản | `wattpad-search.spec.ts` | TC01–TC07 |  Pass |
+| Kết quả tìm kiếm | `wattpad-search-results.spec.ts` | TC08–TC15 |  Pass |
+| Gợi ý tìm kiếm | `wattpad-search-suggestions.spec.ts` | TC16–TC18 |  Pass |
 
 ---
 

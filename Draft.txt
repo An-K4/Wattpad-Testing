@@ -1,0 +1,162 @@
+﻿Đây là toàn bộ test case có thể có cho 3 chức năng (của claude):
+________________
+
+
+🔍 Tìm kiếm
+Tìm kiếm cơ bản
+* TC01 - Tìm kiếm với từ khóa hợp lệ → trả về kết quả
+* TC02 - Tìm kiếm với từ khóa không tồn tại → hiển thị thông báo không có kết quả
+* TC03 - Tìm kiếm để trống → không thực hiện tìm kiếm / hiển thị gợi ý
+* TC04 - Tìm kiếm với ký tự đặc biệt (@#$%) → không crash, xử lý gracefully
+* TC05 - Tìm kiếm với chuỗi rất dài (500+ ký tự) → không crash
+* TC06 - Tìm kiếm với số thuần túy (123456)
+* TC07 - Tìm kiếm bằng tag
+Kết quả tìm kiếm
+* TC08 - Kết quả hiển thị đúng thông tin (tên truyện, tác giả, ảnh bìa)
+* TC09 - Click vào kết quả → chuyển đúng trang truyện
+* TC10 - Kết quả có thể phân trang / load thêm (infinite scroll)
+* TC11 - Lọc kết quả theo thể loại (Romance, Fantasy, Horror...)
+* TC12 - Lọc kết quả theo ngôn ngữ
+* TC13 - Sắp xếp kết quả theo độ phổ biến / mới nhất / hoàn thành
+* TC14 - Tìm kiếm theo tên tác giả → hiển thị profile tác giả trong kết quả
+* TC15 - Tìm kiếm hiển thị cả Stories lẫn Users trong kết quả
+Gợi ý tìm kiếm
+* TC16 - Gõ vào ô tìm kiếm → hiển thị dropdown gợi ý
+* TC17 - Gợi ý cập nhật realtime khi gõ thêm ký tự
+* TC18 - Click vào gợi ý → thực hiện tìm kiếm đúng từ khóa đó
+________________
+
+
+📖 Tạo truyện mới
+Điều kiện tạo truyện
+* TC19 - Tạo truyện thành công với đầy đủ thông tin hợp lệ
+* TC20 - Tạo truyện khi chưa đăng nhập → redirect về trang login
+* TC21 - Bỏ trống tiêu đề → không cho tạo, hiển thị lỗi
+* TC22 - Bỏ trống mô tả → không cho tạo hoặc cảnh báo
+* TC23 - Không chọn thể loại → không cho tạo hoặc cảnh báo
+* TC24 - Không chọn ngôn ngữ → không cho tạo hoặc cảnh báo
+Validation nội dung
+* TC25 - Tiêu đề quá dài (vượt giới hạn ký tự) → hiển thị lỗi / cắt bớt
+* TC26 - Tiêu đề chỉ có khoảng trắng → không hợp lệ
+* TC27 - Mô tả quá dài → hiển thị lỗi / cắt bớt
+* TC28 - Tiêu đề chứa ký tự đặc biệt → xử lý đúng
+Tuỳ chỉnh truyện
+* TC29 - Upload ảnh bìa đúng định dạng (JPG/PNG) → hiển thị preview
+* TC30 - Upload ảnh bìa sai định dạng (PDF, GIF...) → hiển thị lỗi
+* TC31 - Upload ảnh bìa quá dung lượng → hiển thị lỗi
+* TC32 - Chọn truyện là Public → ai cũng xem được
+* TC33 - Chọn truyện là Private → chỉ mình xem được
+* TC34 - Chọn truyện là Mature → hiển thị cảnh báo nội dung 18+
+* TC35 - Thêm tag cho truyện → tag hiển thị đúng
+* TC36 - Thêm tag trùng lặp → chỉ giữ 1
+* TC37 - Thêm quá số lượng tag cho phép → hiển thị lỗi
+Sau khi tạo
+* TC38 - Truyện vừa tạo xuất hiện trong "My Works"
+* TC39 - Thông tin truyện hiển thị đúng trên trang truyện
+* TC40 - Có thể chỉnh sửa thông tin truyện sau khi tạo
+* TC41 - Có thể xoá truyện sau khi tạo
+________________
+
+
+📝 Đăng chương mới
+Điều kiện đăng chương
+* TC42 - Đăng chương thành công với đầy đủ thông tin
+* TC43 - Đăng chương trống không → bị từ chối
+* TC44 - Bỏ trống tiêu đề chương → không cho đăng, hiển thị lỗi
+* TC45 - Bỏ trống nội dung chương → không cho đăng, hiển thị lỗi
+Nội dung chương
+* TC46 - Tiêu đề chương quá dài → hiển thị lỗi / cắt bớt
+* TC47 - Nội dung chương quá ngắn (dưới giới hạn tối thiểu) → cảnh báo
+* TC48 - Nội dung chứa ký tự đặc biệt / emoji → hiển thị đúng
+* TC49 - Nội dung chứa link ngoài → xử lý đúng (giữ / loại bỏ)
+* TC50 - Copy-paste nội dung từ Word vào editor → giữ định dạng hoặc plain text
+Soạn thảo (Editor)
+* TC51 - In đậm (Bold) hoạt động đúng
+* TC52 - In nghiêng (Italic) hoạt động đúng
+* TC53 - Căn lề (trái/giữa/phải) hoạt động đúng
+* TC54 - Auto-save khi đang soạn thảo
+* TC55 - Khôi phục bản nháp khi thoát ra rồi vào lại
+Xuất bản
+* TC56 - Lưu chương dưới dạng Draft → chưa hiển thị công khai
+* TC57 - Publish chương → hiển thị công khai cho người đọc
+* TC58 - Đặt lịch publish chương vào thời điểm trong tương lai
+* TC59 - Thứ tự chương hiển thị đúng (chương 1 → 2 → 3...)
+* TC60 - Chỉnh sửa chương đã publish → cập nhật đúng nội dung
+* TC61 - Xoá chương đã publish → không còn hiển thị
+________________
+
+
+Tổng cộng 61 test case. 
+
+
+Test thủ công (tất nhiên là test rồi) và phản ứng của wattpad:
+(*) Tìm kiếm:
+- Thực hiện tìm kiếm khi chưa đăng nhập -> Được chứ~
+- Tìm bằng tên truyện -> ra kq
+- Tìm bằng tên tác giả -> ra kq, nhưng nhập sai tên tác giả thì đừng hòng
+- Tìm bằng tag (truyện trên wattpad thường có tag, và tìm bằng tag thì ra khá chuẩn) -> ra kq
+- Thay đổi điều kiện lọc -> khá chuẩn, ít lỗi nhất luôn
+- Nhập một đoạn văn dài ơi là dài -> Ứ ra kết quả
+- Có hiện dropdown gọi ý khi tìm kiếm (chỉ khi vẫn đang nhập đúng chính tả thôi :)))
+- Tìm kiếm đa ngôn ngữ -> Không ổn lắm, nếu muốn ra kết quả chuẩn thì phải thay đổi ngôn ngữ của hệ thống trước, không thì kết quả vẫn ra truyện tiếng Việt thôi.
+- Tìm kiếm bằng nội dung truyện -> Có thể chấp nhận nội dung nhập vào ô tìm kiếm lên tới hơn 1000 kí tự (một đoạn văn có nghĩa), nhưng kết quả linh tinh lắm, không chuẩn đâu.
+
+
+(*) Tạo truyện mới:
+- Nhập đầy đủ thông tin -> pass
+- Nhập thiếu một vài thông tin đáng ra bắt buộc phải nhập -> Vẫn cho viết tiếp, nhưng muốn đăng được truyện thì phải nhập đủ.
+- Bỏ trắng tên chương, tên truyện -> Tự điền “Truyện không có tiêu đề [số thứ tự]” rồi cho qua.
+- Không đặt ảnh bìa -> Lấy ảnh đại diện làm ảnh bìa :)))
+
+
+(*) Đăng tải chương mới:
+- Thiếu thông tin truyện trước khi đăng chương -> Bắt nhập đủ
+- Điền đủ thông tin -> Cho phép đăng truyện
+- Đăng truyện có ảnh -> Hiện ảnh chuẩn xác
+- Truyện có định dạng đặc biệt (nghiêng, đậm, căn trái căn phải,…) -> Đăng được và hiện chuẩn
+- Chương quá 20 ảnh -> Báo lỗi limit
+- Chương toàn ảnh và video -> Đăng hợp lệ
+- Đăng chương có chứa video -> Không cho chọn vid trên máy, phải dẫn link youtube nhé
+
+
+Test case nghĩ ra nhưng chưa test:
+- Tìm kiếm toàn số
+- Tìm bằng văn bản vô nghĩa (một đoạn dài vô nghĩa)
+- Đăng chương truyện trống (không có nd)
+- Đăng truyện bằng chữ tượng hình hoặc có chứa emoji (chưa thử, nhưng cơ bản những truyện tớ đọc thấy không vẫn đề gì, nên chắc là pass đấy)
+
+
+Những test đã thử nhưng ứ hiểu kiểu gì:
+(*) Nhập một chuỗi kí tự (ngắn thôi) vô nghĩa:
+- Kết quả mong đợi: Báo lỗi, không tìm thấy
+- Kết quả thực tế: Hiện kết quả :))))
+- Nguyên nhân: Mấy cái truyện có tên như vậy thực sự tồn tại 
+  
+
+Ờ thì nếu nhập khác đi thì đúng là lỗi thật:
+  
+
+
+
+(*) Tìm kiếm với nội dung trống (không nhập gì mà cứ thế bấm enter/nhấn vào nút tìm kiếm):
+- Kết quả mong đợi: Chuyển sang trang tìm kiếm, báo lỗi hoặc chí ít thì không thay đổi gì
+- Kết quả thực tế: Vẫn ở nguyên trang chủ (home), nhưng ngôn ngữ hiển thị chuyển từ tiếng Việt qua tiếng Anh :))))
+- Nguyên nhân: Hiểu chít liền à!
+
+
+(*) Tìm kiếm bằng mô tả của truyện:
+Nguyên văn nội dung được nhập vào ô tìm kiếm như sau (đoạn mô tả này cop được từ một truyện và nó có tồn tại nhé):
+“Như để khiêu chiến, cậu ta liên tục gửi cho anh những bông trà đỏ. Đáp lại, mỗi ngày anh đều gửi cho cựu cộng sự của anh một bông hồng vàng. Giá mà hoa hồng xanh có tồn tại trong tự nhiên thì anh sẽ dùng chúng, thứ mà anh muốn trao đi là những cái hoa tươi chứ không phải hoa nhuộm thuốc màu.”
+
+
+Một người… trân trọng sự sống hơn bất kì ai
+Người kia… khát cầu cái chết hơn bất kì ai.
+
+
+Như đóa hồng xanh bí ẩn, đến cả chúa trời cũng không thể biết khi kề cận cửa tử con người sẽ lựa chọn cái gì!”
+493 kí tự, về lí thuyết là sập tìm kiếm rồi (có một lần nữa là 590 kí tự, kết quả tương tự).
+- Kết quả mong đợi: Tìm kiếm không có kết quả, hoặc nếu ra được kết quả thì phải ra đúng truyện.
+- Kết quả thực tế: Ra kết quả (và ra đúng kq cùng với vài truyện linh tinh khác) trên nick chính; không ra kq (có lần vẫn ra, nhưng ra linh tinh cái gì gì đó) khi tìm kiếm lúc chưa đăng nhập hoặc tìm trên nick phụ :))) (hên xui tùy lúc)
+  
+
+- Nguyên nhân: Cái này thì là do nhân phẩm hả!?
