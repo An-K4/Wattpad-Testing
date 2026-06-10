@@ -61,3 +61,15 @@ export function getStoryCards(page: Page) {
 export async function countStoryCards(page: Page) {
   return await getStoryCards(page).count()
 }
+
+export async function browseByTag(page: any, tagName: string) {
+    const browseBtn = page.locator('#discover-dropdown button').first();
+    await browseBtn.dispatchEvent('click');
+
+    const dropdown = page.getByRole('list', { name: 'Browse' });
+    await dropdown.waitFor({ state: 'visible', timeout: 5000 });
+
+    const tagLink = dropdown.locator('a').getByText(tagName, { exact: true });
+    await tagLink.waitFor({ state: 'visible', timeout: 5000 });
+    await tagLink.click();
+}
