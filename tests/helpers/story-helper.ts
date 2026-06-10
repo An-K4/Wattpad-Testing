@@ -1,97 +1,131 @@
-import { type Page } from '@playwright/test'
+import { type Page, type Browser } from '@playwright/test'
+
+// ─── Navigation ──────────────────────────────────────────────────────────────
 
 /**
- * Navigate đến trang tạo truyện mới
+ * Điều hướng đến trang tạo truyện và đợi form sẵn sàng.
  */
-export async function goToCreateStoryPage(page: Page) {
-  await page.goto('https://www.wattpad.com/myworks/new', {
-    timeout: 60000,
-    waitUntil: 'domcontentloaded'
-  })
+export async function goToNewStoryPage(page: Page) {
+    await page.goto('https://www.wattpad.com/write/story/new', {
+        timeout: 60000,
+        waitUntil: 'domcontentloaded',
+    })
+    await page.locator('input#title').waitFor({ state: 'visible', timeout: 20000 })
 }
 
 /**
- * Điền form tạo truyện với các thông tin đầy đủ
+ * Tạo browser context hoàn toàn sạch (không có session/cookie).
+ * Dùng cho các test yêu cầu trạng thái chưa đăng nhập.
  */
-export async function fillStoryForm(page: Page, data: {
-  title?: string
-  description?: string
-  language?: string
-  genre?: string
-  tags?: string[]
-  isPublic?: boolean
-  isMature?: boolean
-}) {
-  if (data.title !== undefined) {
-    const titleInput = page.locator('input[name="title"], #title').first()
-    await titleInput.fill(data.title)
-  }
+export async function newGuestContext(browser: Browser) {
+    return browser.newContext({ storageState: { cookies: [], origins: [] } })
+}
 
-  if (data.description !== undefined) {
-    const descInput = page.locator('textarea[name="description"], #description').first()
-    await descInput.fill(data.description)
-  }
+// ─── Form interaction ─────────────────────────────────────────────────────────
 
-  if (data.language) {
-    const langSelect = page.locator('select[name="language"], #language').first()
-    await langSelect.selectOption(data.language)
-  }
+/**
+ * Điền title vào form tạo truyện.
+ */
+export async function fillTitle(page: Page, title: string) {
+    await page.locator('input#title').fill(title)
+}
 
-  if (data.genre) {
-    const genreSelect = page.locator('select[name="category"], select[name="genre"], #genre').first()
-    await genreSelect.selectOption(data.genre)
-  }
+/**
+ * Điền description vào form tạo truyện.
+ */
+export async function fillDescription(page: Page, description: string) {
+    await page.locator('textarea#description').fill(description)
+}
 
-  if (data.tags && data.tags.length > 0) {
-    const tagInput = page.locator('input[name="tags"], #tags').first()
-    for (const tag of data.tags) {
-      await tagInput.fill(tag)
-      await tagInput.press('Enter')
-      await page.waitForTimeout(500)
+/**
+ * Chọn ngôn ngữ. Giá trị mặc định là '1' (English).
+ * Một số giá trị: 1=English, 19=Tiếng Việt, 2=Français, 7=Русский
+ */
+export async function selectLanguage(page: Page, value: string) {
+    await page.locator('select#story-language').selectOption(value)
+}
+
+/**
+ * Chọn Story type: 'Fiction' | 'Fanfic' | 'Nonfiction' | 'Poetry'
+ * Lưu ý: Wattpad có thể auto-redirect ngay sau khi chọn.
+ */
+export async function selectStoryType(page: Page, type: 'Fiction' | 'Fanfic' | 'Nonfiction' | 'Poetry') {
+    await page.locator(`button:has-text("${type}")`).first().click()
+}
+
+/**
+ * Click nút "Save & Continue" trên header.
+ * Dùng selector text thay vì class hash vì Wattpad dùng CSS Modules (hash đổi sau mỗi deploy).
+ */
+export async function clickSave(page: Page) {
+    const saveBtn = page.locator('header button:has-text("Save")').first()
+    await saveBtn.waitFor({ state: 'visible', timeout: 10000 })
+    await saveBtn.click({ force: true })
+}
+
+// ─── Submit & redirect ────────────────────────────────────────────────────────
+
+/**
+ * Submit form tạo truyện và đợi kết quả.
+ * Xử lý cả 2 trường hợp:
+ *   - Wattpad auto-redirect sau khi chọn Story type
+ *   - Wattpad cần click "Save & Continue" thủ công
+ * Trả về URL sau khi submit (dù thành công hay không).
+ */
+export async function submitStoryForm(page: Page): Promise<string> {
+    // Đợi xem Wattpad có tự redirect không (xảy ra sau khi chọn Story type)
+    await page.waitForTimeout(3000)
+
+    if (!page.url().match(/\/myworks\/\d+\/write\/\d+/)) {
+        await clickSave(page)
+        await page.waitForTimeout(6000)
+    } else {
+        console.log('📋 submitStoryForm: Wattpad đã tự redirect, bỏ qua bước Save.')
     }
-  }
 
-  if (data.isPublic !== undefined) {
-    const visibilityRadio = page.locator(`input[type="radio"][value="${data.isPublic ? 'public' : 'private'}"]`).first()
-    await visibilityRadio.check()
-  }
+    return page.url()
+}
 
-  if (data.isMature !== undefined && data.isMature) {
-    const matureCheckbox = page.locator('input[type="checkbox"][name="mature"], #mature').first()
-    await matureCheckbox.check()
-  }
+// ─── Assertions helpers ───────────────────────────────────────────────────────
+
+/**
+ * Kiểm tra URL có phải trang viết chương (redirect thành công) không.
+ * URL dạng: /myworks/{storyId}/write/{partId}
+ */
+export function isWriterPage(url: string): boolean {
+    return /\/myworks\/\d+\/write\/\d+/.test(url)
 }
 
 /**
- * Click nút tạo truyện
+ * Trích xuất storyId từ URL trang viết chương.
  */
-export async function submitStoryForm(page: Page) {
-  const submitBtn = page.locator('button[type="submit"], button:has-text("Create"), button:has-text("Tạo")').first()
-  await submitBtn.click()
-  await page.waitForTimeout(3000)
+export function extractStoryId(url: string): string | null {
+    const match = url.match(/\/myworks\/(\d+)\/write\//)
+    return match?.[1] ?? null
 }
 
-/**
- * Upload ảnh bìa truyện
- */
-export async function uploadCoverImage(page: Page, imagePath: string) {
-  const fileInput = page.locator('input[type="file"][accept*="image"]').first()
-  await fileInput.setInputFiles(imagePath)
-  await page.waitForTimeout(2000)
-}
+// ─── Cleanup ──────────────────────────────────────────────────────────────────
 
 /**
- * Kiểm tra có thông báo lỗi hiển thị
+ * Xóa truyện theo storyId. Comment lại nếu muốn kiểm tra thủ công trên myworks.
  */
-export async function hasErrorMessage(page: Page): Promise<boolean> {
-  const errorLocator = page.locator('.error, [class*="error"], [role="alert"], .alert-danger').first()
-  return await errorLocator.isVisible().catch(() => false)
-}
-
-/**
- * Lấy text của thông báo lỗi
- */
-export async function getErrorMessage(page: Page): Promise<string> {
-  const errorLocator = page.locator('.error, [class*="error"], [role="alert"], .alert-danger').first()
-  return await errorLocator.textContent() || ''
+export async function deleteStory(page: Page, storyId: string) {
+    try {
+        await page.goto(`https://www.wattpad.com/myworks/${storyId}`, {
+            timeout: 30000,
+            waitUntil: 'domcontentloaded',
+        })
+        const moreBtn = page.locator(`#works-more-options-${storyId}`).locator('..').locator('button.dropdown-toggle').first()
+        await moreBtn.click()
+        const deleteLink = page.locator(`a.on-set-storyId[data-id="${storyId}"]`)
+        await deleteLink.waitFor({ state: 'visible', timeout: 5000 })
+        await deleteLink.click()
+        const confirmBtn = page.locator('#delete-only-modal button:has-text("Delete")').first()
+        if (await confirmBtn.isVisible({ timeout: 3000 }).catch(() => false)) {
+            await confirmBtn.click()
+        }
+        console.log(`🗑️  Đã xóa truyện ID: ${storyId}`)
+    } catch {
+        console.warn(`⚠️  Không thể tự động xóa truyện ${storyId}, xóa thủ công trên myworks.`)
+    }
 }
