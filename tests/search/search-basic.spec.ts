@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test'
-import { goToHomePage, getSearchBox, performSearch, browseByTag } from '../helpers/search-helper.js'
+import { goToHomePage, getSearchBox, performSearch, searchByBrowse } from '../helpers/search-helper.js'
 
 test.describe('Wattpad Search Basic (TC01-TC07)', () => {
 
@@ -63,22 +63,21 @@ test.describe('Wattpad Search Basic (TC01-TC07)', () => {
     console.log(' TC06: Hoàn thành - Tìm kiếm bằng số hoạt động bình thường.')
   })
 
-  test('TC07 - Tìm kiếm bằng tag qua mục Browse', async ({ page }) => {
-    console.log('⏳ TC07: Tìm kiếm bằng tag qua menu Browse...');
-    await goToHomePage(page);
+  test('TC07 - Tìm kiếm truyện cùng chủ đề qua mục Browse (Khám phá)', async ({ page }) => {
+    console.log('TC07: Tìm kiếm bằng tag qua menu Browse...')
 
-    await browseByTag(page, 'Romance');
+    await searchByBrowse(page, 'Romance')
 
-    await page.waitForURL('**/stories/romance', { timeout: 10000 });
+    await page.waitForURL('**/stories/romance', { timeout: 10000 })
 
     await page.waitForFunction(
       () => document.querySelectorAll('a.story-card, a.HsS0N[href*="/story/"]').length > 0,
       { timeout: 20000 }
-    );
-    
-    const storyCount = await page.locator('a.HsS0N[href*="/story/"]').count();
-    expect(storyCount).toBeGreaterThan(0);
+    )
 
-    console.log(`TC07: Hoàn thành - Tìm bằng tag "Romance" → ${storyCount} truyện tại ${page.url()}`);
+    const storyCount = await page.locator('a.HsS0N[href*="/story/"]').count()
+    expect(storyCount).toBeGreaterThan(0)
+
+    console.log(`TC07: Hoàn thành - Tìm theo "Romance" → ${storyCount} truyện tại ${page.url()}`)
   })
 })
