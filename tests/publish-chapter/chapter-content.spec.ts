@@ -18,10 +18,12 @@ test.describe('Wattpad Chapter Content (TC46-TC50)', () => {
     await page.waitForTimeout(2000)
 
     const hasError = await hasChapterError(page)
-    console.log(` TC46: ${hasError ? 'Hiển thị lỗi' : 'Xử lý thành công'}.`)
+
+    expect(hasError).toBe(true)
+    console.log(' TC46: Hiển thị lỗi.')
   })
 
-  test('TC47 - Nội dung chương quá ngắn (dưới giới hạn tối thiểu) → cảnh báo', async ({ page }) => {
+  test('TC47 - Nội dung chương quá ngắn (dưới giới hạn tối thiểu) → cho phép đăng', async ({ page }) => {
     console.log(' Đang chạy TC47: Nội dung chương quá ngắn...')
     await goToNewChapterPage(page)
     await page.waitForTimeout(3000)
@@ -35,7 +37,8 @@ test.describe('Wattpad Chapter Content (TC46-TC50)', () => {
     await page.waitForTimeout(2000)
 
     const hasError = await hasChapterError(page)
-    console.log(` TC47: ${hasError ? 'Hiển thị cảnh báo' : 'Cho phép đăng'}.`)
+    expect(hasError).toBe(false)
+    console.log(' TC47: Cho phép đăng.')
   })
 
   test('TC48 - Nội dung chứa ký tự đặc biệt / emoji → hiển thị đúng', async ({ page }) => {
@@ -69,8 +72,8 @@ test.describe('Wattpad Chapter Content (TC46-TC50)', () => {
     await publishChapter(page)
     await page.waitForTimeout(2000)
 
-    // Hệ thống có thể cho phép hoặc loại bỏ link
-    await expect(page.locator('body')).toBeVisible()
+    const hasError = await hasChapterError(page)
+    expect(hasError).toBe(false)
     console.log(' TC49: Hoàn thành - Xử lý link trong nội dung.')
   })
 

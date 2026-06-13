@@ -1,10 +1,10 @@
-import { test } from '@playwright/test'
-import { goToNewChapterPage, fillChapterForm, saveDraft, publishChapter } from '../helpers/chapter-helper.js'
+import { test, expect } from '@playwright/test'
+import { goToNewChapterPage, fillChapterForm, saveDraft, publishChapter, schedulePublishChapter, goToMyWorks, editPublishedChapter, publishChanges } from '../helpers/chapter-helper.js'
 
-test.describe('Wattpad Chapter Publishing (TC56-TC61)', () => {
+test.describe('Wattpad Chapter Publishing (TC57-TC62)', () => {
 
-  test('TC56 - Lưu chương dưới dạng Draft → chưa hiển thị công khai', async ({ page }) => {
-    console.log(' Đang chạy TC56: Lưu chương dưới dạng Draft...')
+  test('TC57 - Lưu chương dưới dạng Draft → chưa hiển thị công khai', async ({ page }) => {
+    console.log(' Đang chạy TC57: Lưu chương dưới dạng Draft...')
     await goToNewChapterPage(page)
     await page.waitForTimeout(3000)
 
@@ -14,17 +14,22 @@ test.describe('Wattpad Chapter Publishing (TC56-TC61)', () => {
     })
 
     await saveDraft(page)
-    await page.waitForTimeout(2000)
 
-    // Kiểm tra có thông báo "Saved as draft"
-    const draftIndicator = page.locator(':has-text("Draft"), :has-text("Saved")').first()
-    const hasDraft = await draftIndicator.isVisible().catch(() => false)
+    // Đợi cho "Đang lưu..." xuất hiện
+    await page.waitForSelector('.save-indicator:has-text("Đang lưu")', { timeout: 10000 }).catch(() => null)
 
-    console.log(` TC56: Hoàn thành - ${hasDraft ? 'Lưu draft thành công' : 'Đã lưu'}.`)
+    // Đợi cho "Đang lưu..." biến mất (đã lưu xong)
+    await page.waitForSelector('.save-indicator:not(:has-text("Đang lưu"))', { timeout: 15000 }).catch(() => null)
+
+    // Kiểm tra vẫn ở trang editor (chưa publish)
+    const editorVisible = await page.locator('.story-editor').isVisible().catch(() => false)
+    expect(editorVisible).toBe(true)
+
+    console.log('TC57: Hoàn thành - Đã lưu draft thành công')
   })
 
-  test('TC57 - Publish chương → hiển thị công khai cho người đọc', async ({ page }) => {
-    console.log(' Đang chạy TC57: Publish chương...')
+  test('TC58 - Publish chương → hiển thị công khai cho người đọc', async ({ page }) => {
+    console.log(' Đang chạy TC58: Publish chương...')
     await goToNewChapterPage(page)
     await page.waitForTimeout(3000)
 
@@ -36,123 +41,91 @@ test.describe('Wattpad Chapter Publishing (TC56-TC61)', () => {
     await publishChapter(page)
     await page.waitForTimeout(3000)
 
-    // Kiểm tra redirect hoặc thông báo publish thành công
-    const successMsg = page.locator(':has-text("Published"), :has-text("Success")').first()
-    const hasSuccess = await successMsg.isVisible().catch(() => false)
+    // Kiểm tra đã redirect đến trang công khai (URL không còn /write hoặc /publish)
+    const currentURL = page.url()
+    const isPublicPage = !currentURL.includes('/write') && !currentURL.includes('/publish')
 
-    console.log(` TC57: Hoàn thành - ${hasSuccess ? 'Publish thành công' : 'Đã đăng'}.`)
+    expect(isPublicPage).toBe(true)
+    console.log(' TC58: Hoàn thành - Publish thành công, đã chuyển đến trang công khai.')
   })
 
-  test('TC58 - Đặt lịch publish chương vào thời điểm trong tương lai', async ({ page }) => {
-    console.log(' Đang chạy TC58: Đặt lịch publish...')
+  test('TC59 - Đặt lịch publish chương vào thời điểm trong tương lai', async ({ page }) => {
+    console.log(' Đang chạy TC59: Đặt lịch publish...')
     await goToNewChapterPage(page)
     await page.waitForTimeout(3000)
 
     await fillChapterForm(page, {
-      title: 'Chương Scheduled',
+      title: 'Chương Scheduled - ' + Date.now(),
       content: 'Nội dung chương sẽ publish sau.'
     })
 
-    // Tìm option schedule
-    const scheduleBtn = page.locator('button:has-text("Schedule"), [class*="schedule"]').first()
-    const hasSchedule = await scheduleBtn.isVisible().catch(() => false)
-
-    if (hasSchedule) {
-      await scheduleBtn.click()
-      await page.waitForTimeout(2000)
-
-      // Fill datetime picker
-      const dateInput = page.locator('input[type="date"], input[type="datetime-local"]').first()
-      const hasDateInput = await dateInput.isVisible().catch(() => false)
-
-      console.log(` TC58: ${hasDateInput ? 'Có chức năng đặt lịch' : 'Đã click schedule'}.`)
-    } else {
-      console.log(' TC58: Không tìm thấy chức năng đặt lịch.')
-    }
-  })
-
-  test('TC59 - Thứ tự chương hiển thị đúng (chương 1 → 2 → 3...)', async ({ page }) => {
-    console.log(' Đang chạy TC59: Kiểm tra thứ tự chương...')
-
-    // Vào My Works và xem danh sách chương
-    await page.goto('https://www.wattpad.com/myworks', {
-      timeout: 60000,
-      waitUntil: 'domcontentloaded'
-    })
+    await schedulePublishChapter(page)
     await page.waitForTimeout(3000)
 
-    // Click vào truyện đầu tiên
-    const firstStory = page.locator('a[href*="/story/"]').first()
-    const isVisible = await firstStory.isVisible().catch(() => false)
+    // Kiểm tra modal thành công xuất hiện
+    const successModal = page.locator('h2:has-text("Phần truyện của bạn đã được lên lịch"), h2:has-text("scheduled")').first()
+    const hasSuccessModal = await successModal.isVisible().catch(() => false)
 
-    if (isVisible) {
-      await firstStory.click()
-      await page.waitForTimeout(3000)
-
-      // Kiểm tra danh sách chương
-      const chapters = page.locator('.chapter, [class*="chapter"]')
-      const chapterCount = await chapters.count()
-
-      console.log(` TC59: Hoàn thành - Tìm thấy ${chapterCount} chương.`)
-    } else {
-      console.log(' TC59: Không tìm thấy truyện để kiểm tra.')
-    }
+    expect(hasSuccessModal).toBe(true)
+    console.log(' TC59: Hoàn thành - Đã đặt lịch publish thành công.')
   })
 
   test('TC60 - Chỉnh sửa chương đã publish → cập nhật đúng nội dung', async ({ page }) => {
-    console.log(' Đang chạy TC60: Chỉnh sửa chương đã publish...')
+    console.log('Đang chạy TC60: Chỉnh sửa chương đã publish...')
 
-    await page.goto('https://www.wattpad.com/myworks', {
-      timeout: 60000,
-      waitUntil: 'domcontentloaded'
-    })
-    await page.waitForTimeout(3000)
+    await goToMyWorks(page)
+    await editPublishedChapter(page)
 
-    // Tìm nút Edit chapter
-    const editBtn = page.locator('button:has-text("Edit"), a:has-text("Edit")').first()
-    const hasEdit = await editBtn.isVisible().catch(() => false)
+    // Sửa nội dung
+    const editor = page.locator('.story-editor').first()
+    const hasEditor = await editor.isVisible().catch(() => false)
+    expect(hasEditor).toBe(true)
 
-    if (hasEdit) {
-      await editBtn.click()
-      await page.waitForTimeout(2000)
+    await editor.click()
+    await page.keyboard.type(' - Nội dung đã chỉnh sửa ' + Date.now())
+    await page.waitForTimeout(1000)
 
-      // Sửa nội dung
-      const editor = page.locator('textarea[name="content"], .editor, [contenteditable="true"]').first()
-      const hasEditor = await editor.isVisible().catch(() => false)
+    await publishChanges(page)
 
-      if (hasEditor) {
-        await editor.click()
-        await page.keyboard.type(' - Nội dung đã chỉnh sửa')
-        await page.waitForTimeout(1000)
+    // Kiểm tra đã chuyển đến trang công khai của chapter
+    const currentURL = page.url()
+    const isPublicPage = !currentURL.includes('/write') && !currentURL.includes('/publish')
 
-        console.log(' TC60: Hoàn thành - Có thể chỉnh sửa chương.')
-      }
-    } else {
-      console.log(' TC60: Không tìm thấy nút Edit.')
-    }
+    expect(isPublicPage).toBe(true)
+    console.log('TC60: Hoàn thành - Đã chỉnh sửa và đăng lại chương thành công.')
   })
 
   test('TC61 - Xoá chương đã publish → không còn hiển thị', async ({ page }) => {
-    console.log(' Đang chạy TC61: Kiểm tra xóa chương...')
+    console.log('Đang chạy TC61: Xóa chương đã publish...')
 
-    await page.goto('https://www.wattpad.com/myworks', {
-      timeout: 60000,
-      waitUntil: 'domcontentloaded'
-    })
-    await page.waitForTimeout(3000)
+    await goToMyWorks(page)
+    await editPublishedChapter(page)
 
-    // Tìm nút Delete chapter
-    const deleteBtn = page.locator('button:has-text("Delete"), a:has-text("Delete")').first()
-    const hasDelete = await deleteBtn.isVisible().catch(() => false)
+    // Bấm button menu settings
+    const menuBtn = page.locator('.on-show-settings').first()
+    await menuBtn.click()
+    await page.waitForTimeout(1000)
 
-    if (hasDelete) {
-      console.log(' TC61: Tìm thấy nút Delete - chức năng xóa chương khả dụng.')
-      // Không thực sự xóa để tránh mất dữ liệu
-    } else {
-      console.log(' TC61: Không tìm thấy nút Delete trực tiếp.')
+    // Chọn "Xóa chương này" hoặc "Delete this part"
+    const deleteOption = page.locator('button:has-text("Xóa chương này"), button:has-text("Delete this part"), a:has-text("Xóa chương này"), a:has-text("Delete this part")').first()
+    await deleteOption.click()
+    await page.waitForTimeout(1000)
+
+    // Xác nhận xóa nếu có modal confirm
+    const confirmBtn = page.locator('button:has-text("Xóa"), button:has-text("Delete"), button:has-text("Xác nhận")').first()
+    const hasConfirm = await confirmBtn.isVisible({ timeout: 3000 }).catch(() => false)
+
+    if (hasConfirm) {
+      await confirmBtn.click()
+      await page.waitForTimeout(2000)
     }
 
-    console.log(' TC61: Hoàn thành - Đã kiểm tra chức năng xóa.')
+    // Kiểm tra đã chuyển về trang các chương của truyện (table of contents)
+    const currentURL = page.url()
+    const isTableOfContents = currentURL.includes('/myworks/') && !currentURL.includes('/write')
+
+    expect(isTableOfContents).toBe(true)
+    console.log('TC61: Hoàn thành - Đã xóa chương và quay về trang danh sách chương.')
   })
 
 })
