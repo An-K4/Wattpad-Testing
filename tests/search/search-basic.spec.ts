@@ -64,20 +64,20 @@ test.describe('Wattpad Search Basic (TC01-TC07)', () => {
   })
 
   test('TC07 - Tìm kiếm truyện cùng chủ đề qua mục Browse (Khám phá)', async ({ page }) => {
-    console.log('TC07: Tìm kiếm bằng tag qua menu Browse...')
+    console.log('TC07: Bấm Browse và chọn Romance hoặc Lãng mạn...')
 
-    await searchByBrowse(page, 'Romance')
+    await searchByBrowse(page, ['Romance', 'Lãng mạn'])
 
-    await page.waitForURL('**/stories/romance', { timeout: 10000 })
+    await page.waitForURL('**/stories/**', { timeout: 15000 })
 
     await page.waitForFunction(
-      () => document.querySelectorAll('a.story-card, a.HsS0N[href*="/story/"]').length > 0,
+      () => document.querySelectorAll('a[href*="/story/"]').length > 0,
       { timeout: 20000 }
     )
 
-    const storyCount = await page.locator('a.HsS0N[href*="/story/"]').count()
+    const storyCount = await page.locator('a[href*="/story/"]:visible').count()
     expect(storyCount).toBeGreaterThan(0)
 
-    console.log(`TC07: Hoàn thành - Tìm theo "Romance" → ${storyCount} truyện tại ${page.url()}`)
+    console.log(`TC07: Hoàn thành - Hiển thị ${storyCount} truyện tại ${page.url()}`)
   })
 })

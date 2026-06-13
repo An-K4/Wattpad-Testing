@@ -62,54 +62,36 @@ export async function countStoryCards(page: Page) {
   return await getStoryCards(page).count()
 }
 
-export async function searchByBrowse(page: Page, tagName: string): Promise<void> {
-  console.log(`[DEBUG] Bắt đầu kiểm tra với dispatchEvent('click') cho tag: ${tagName}`)
+export async function searchByBrowse(page: Page, tagNames: string[]): Promise<string> {
+  console.log(`[DEBUG] Bắt đầu tìm kiếm các tag: ${tagNames.join(', ')}`)
 
-  const buttonSelector = '#discover-dropdown button'
-  const menuSelector = '#discover-dropdown .MaVh4'
+  // Click vào nút Browse (discover-dropdown) sử dụng testid
+  await page.waitForTimeout(2000)
+  await page.getByTestId('discover-dropdown').getByTestId('wp_chevron_down').click()
+  console.log('[DEBUG] Đã bấm nút Browse, chờ dropdown hiển thị...')
 
-  try {
-    // THAY ĐỔI QUAN TRỌNG: Đợi phần tử tồn tại trong DOM (attached), không quan tâm ẩn hay hiện
-    await page.waitForSelector(buttonSelector, { state: 'attached', timeout: 5000 })
+  await page.waitForTimeout(1500)
 
-    // Gửi mousedown trước để kích hoạt bộ lắng nghe của React
-    console.log('[DEBUG] Đang gửi mousedown...')
-    await page.dispatchEvent(buttonSelector, 'mousedown')
+  // Chờ dropdown menu hiển thị
+  const dropdownMenu = page.locator('#discover-dropdown > div').first()
+  await dropdownMenu.waitFor({ state: 'visible', timeout: 5000 })
+  console.log('[DEBUG] Dropdown đã hiển thị, đang tìm tag phù hợp...')
 
-    // Sau đó gửi click
-    console.log('[DEBUG] Đang gửi click...')
-    await page.dispatchEvent(buttonSelector, 'click')
+  for (const tagName of tagNames) {
+    try {
+      // Tìm link trong discover-dropdown sử dụng role và name
+      const tagLink = page.getByTestId('discover-dropdown').getByRole('link', { name: tagName })
+      const isVisible = await tagLink.isVisible().catch(() => false)
 
-    // Chờ 1 giây để giao diện cập nhật trạng thái
-    await page.waitForTimeout(1000)
-
-    // Kiểm tra xem dropdown đã mở hay chưa
-    const isMenuVisible: boolean = await page.locator(menuSelector).isVisible().catch((): boolean => false)
-
-    const hasTrueClass: boolean = await page.evaluate((): boolean => {
-      const container = document.querySelector('#discover-dropdown')
-      return container ? container.classList.contains('true') : false
-    })
-
-    console.log(`[DEBUG] Trạng thái - Menu hiển thị: ${isMenuVisible} | Container có class 'true': ${hasTrueClass}`)
-
-    // Nếu dropdown mở, thực hiện click vào tag tương ứng
-    if (isMenuVisible || hasTrueClass) {
-      console.log(`[DEBUG] Dropdown đã mở. Tiến hành click vào tag: ${tagName}`)
-
-      const tagLink = page
-        .locator('#discover-dropdown a.c97t-')
-        .getByText(tagName, { exact: true })
-
-      // Click với force: true để bỏ qua bước kiểm tra hiển thị của liên kết
-      await tagLink.click({ force: true, timeout: 5000 })
-      console.log(`[DEBUG] ✅ Hoàn tất tương tác với tag: ${tagName}`)
-    } else {
-      console.log('[DEBUG] ❌ Dropdown không hiển thị, không thể tiếp tục click tag.')
+      if (isVisible) {
+        console.log(`[DEBUG] Tìm thấy tag "${tagName}", đang click...`)
+        await tagLink.click()
+        return tagName
+      }
+    } catch (error) {
+      console.log(`[DEBUG] Không tìm thấy tag "${tagName}":`, error)
     }
-
-  } catch (error: unknown) {
-    const errorMessage = error instanceof Error ? error.message : String(error)
-    console.log(`[DEBUG] ❌ Lỗi xảy ra trong searchByBrowse: ${errorMessage}`)
   }
+
+  throw new Error(`Không tìm thấy tag nào trong danh sách: ${tagNames.join(', ')}`)
 }
