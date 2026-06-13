@@ -18,7 +18,7 @@ test.describe('Wattpad Story Management (TC38-TC41)', () => {
     // Tạo truyện mới (giống TC19)
     await goToNewStoryPage(page)
 
-    const storyTitle = `Automation Test Story – TC38 ${Date.now()}`
+    const storyTitle = `Automation Test Story - TC38 ${Date.now()}`
     const storyDescription = 'Mô tả tự động tạo bởi Playwright để kiểm thử TC38.'
 
     await fillTitle(page, storyTitle)
@@ -39,6 +39,9 @@ test.describe('Wattpad Story Management (TC38-TC41)', () => {
 
     // Xử lý tooltip Create series nếu có ở My Works
     await handleCreateSeriesTooltip(page)
+
+    // Click vào all stories filter
+    await page.locator('#works-content > div.metadata > ul > li:nth-child(2) > span').first().click()
 
     // Tìm truyện vừa tạo trong danh sách
     const storyCard = page.locator('.story-wrapper', { hasText: storyTitle })
@@ -77,7 +80,7 @@ test.describe('Wattpad Story Management (TC38-TC41)', () => {
     // Tạo truyện mới
     await goToNewStoryPage(page)
     const timestamp = Date.now()
-    const storyTitle = `Automation Test Story – TC39 ${timestamp}`
+    const storyTitle = `Automation Test Story - TC39 ${timestamp}`
     const storyDescription = 'Mô tả tự động tạo bởi Playwright để kiểm thử TC39'
 
     await fillTitle(page, storyTitle)
@@ -95,6 +98,9 @@ test.describe('Wattpad Story Management (TC38-TC41)', () => {
     })
     await page.waitForTimeout(3000)
     await handleCreateSeriesTooltip(page)
+
+    // Click vào all stories filter
+    await page.locator('#works-content > div.metadata > ul > li:nth-child(2) > span').first().click()
 
     // Click vào tên truyện
     const storyLink = page.locator('.story-title a', { hasText: String(timestamp) }).first()
@@ -115,7 +121,7 @@ test.describe('Wattpad Story Management (TC38-TC41)', () => {
     const displayedTitle = await titleInput.inputValue()
     console.log(`Tiêu đề: "${displayedTitle}"`)
     // Chỉ kiểm tra nội dung bỏ qua dấu gạch dài hay ngắn
-    expect(displayedTitle.replace(/[-–]/g, '-')).toBe(storyTitle.replace(/[-–]/g, '-'))
+    expect(displayedTitle.replace(/[--]/g, '-')).toBe(storyTitle.replace(/[--]/g, '-'))
 
     // Kiểm tra description
     const descriptionTextarea = page.locator('textarea#description').first()
@@ -151,7 +157,7 @@ test.describe('Wattpad Story Management (TC38-TC41)', () => {
     // 1. Tạo truyện mới
     await goToNewStoryPage(page)
     const timestamp = Date.now()
-    const storyTitle = `Automation Test Story – TC40 ${timestamp}`
+    const storyTitle = `Automation Test Story - TC40 ${timestamp}`
     const storyDescription = 'Mô tả tự động tạo bởi Playwright để kiểm thử TC40'
 
     await fillTitle(page, storyTitle)
@@ -170,6 +176,9 @@ test.describe('Wattpad Story Management (TC38-TC41)', () => {
     await page.waitForTimeout(3000)
     await handleCreateSeriesTooltip(page)
 
+    // Click vào all stories filter
+    await page.locator('#works-content > div.metadata > ul > li:nth-child(2) > span').first().click()
+
     // Click vào tên truyện
     const storyLink = page.locator('.story-title a', { hasText: String(timestamp) }).first()
     await storyLink.click()
@@ -183,7 +192,7 @@ test.describe('Wattpad Story Management (TC38-TC41)', () => {
 
     // Sửa thông tin
     const newTimestamp = Date.now()
-    const newTitle = `Edited Story – TC40 ${newTimestamp}`
+    const newTitle = `Edited Story - TC40 ${newTimestamp}`
     const newDescription = `Đã chỉnh sửa lúc ${new Date().toLocaleString()}`
 
     // Sửa title
@@ -264,6 +273,9 @@ test.describe('Wattpad Story Management (TC38-TC41)', () => {
     await page.waitForTimeout(3000)
     await handleCreateSeriesTooltip(page)
 
+    // Click vào all stories filter
+    await page.locator('#works-content > div.metadata > ul > li:nth-child(2) > span').first().click()
+
     // Tìm truyện với timestamp vừa sửa
     const updatedStoryLink = page.locator('.story-title a', { hasText: String(newTimestamp) }).first()
     await updatedStoryLink.click()
@@ -280,7 +292,7 @@ test.describe('Wattpad Story Management (TC38-TC41)', () => {
     // Kiểm tra title
     const savedTitle = await page.locator('input#title').inputValue()
     console.log(`Title sau sửa: ${savedTitle}`)
-    expect(savedTitle.replace(/[-–]/g, '-')).toBe(newTitle.replace(/[-–]/g, '-'))
+    expect(savedTitle.replace(/[--]/g, '-')).toBe(newTitle.replace(/[--]/g, '-'))
 
     // Kiểm tra description
     const savedDescription = await page.locator('textarea#description').inputValue()
@@ -323,7 +335,7 @@ test.describe('Wattpad Story Management (TC38-TC41)', () => {
     await goToNewStoryPage(page)
 
     const timestamp = Date.now()
-    const storyTitle = `Automation Test Story – TC41 ${timestamp}`
+    const storyTitle = `Automation Test Story - TC41 ${timestamp}`
     const storyDescription = 'Mô tả tự động tạo bởi Playwright để kiểm thử TC41.'
 
     await fillTitle(page, storyTitle)
@@ -347,6 +359,9 @@ test.describe('Wattpad Story Management (TC38-TC41)', () => {
 
     // Xử lý tooltip Create series nếu có ở My Works
     await handleCreateSeriesTooltip(page)
+
+    // Click vào all stories filter
+    await page.locator('#works-content > div.metadata > ul > li:nth-child(2) > span').first().click()
 
     // Tìm card có title chứa timestamp
     const storyCard = page.locator('.works-item-new', { hasText: String(timestamp) }).first()

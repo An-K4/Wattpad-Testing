@@ -113,6 +113,7 @@ export async function saveDraft(page: Page) {
  * Publish chương
  */
 export async function publishChapter(page: Page) {
+  await page.waitForTimeout(2000)
   const publishBtn = page.locator('button:has-text("Publish"), button:has-text("Đăng tải")').first()
   await publishBtn.click()
   await page.waitForTimeout(2000)

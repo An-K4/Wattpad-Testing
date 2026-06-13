@@ -15,7 +15,7 @@ import {
   // deleteStory,
 } from '../helpers/story-helper.js'
 
-test.describe('Wattpad – Tuỳ chỉnh truyện (TC29–TC34)', () => {
+test.describe('Wattpad - Tuỳ chỉnh truyện (TC29-TC34)', () => {
 
   test.describe.configure({ mode: 'serial' })
   test.setTimeout(90000)
@@ -69,7 +69,7 @@ test.describe('Wattpad – Tuỳ chỉnh truyện (TC29–TC34)', () => {
     expect(hasPreview).toBe(false)
 
     // Vẫn tạo truyện được bình thường, Wattpad dùng ảnh đại diện làm cover mặc định
-    await fillTitle(page, 'TC30 – Test cover sai định dạng')
+    await fillTitle(page, 'TC30 - Test cover sai định dạng')
     await fillDescription(page, 'Mô tả test TC30.')
 
     const url = await submitStoryForm(page)
@@ -93,7 +93,7 @@ test.describe('Wattpad – Tuỳ chỉnh truyện (TC29–TC34)', () => {
     await goToNewStoryPage(page)
     await uploadCover(page, 'tests/fixtures/large-image.jpg')
 
-    await fillTitle(page, 'TC31 – Test cover quá dung lượng')
+    await fillTitle(page, 'TC31 - Test cover quá dung lượng')
     await fillDescription(page, 'Mô tả test TC31.')
 
     // Bấm Save & chỉ đợi tối đa 30s. Nếu Wattpad xử lý đúng (báo lỗi dung lượng /
@@ -140,7 +140,7 @@ test.describe('Wattpad – Tuỳ chỉnh truyện (TC29–TC34)', () => {
     console.log('TC33: Thêm các tag...')
 
     await goToNewStoryPage(page)
-    await fillTitle(page, 'TC33 – Test thêm tags')
+    await fillTitle(page, 'TC33 - Test thêm tags')
     await fillDescription(page, 'Mô tả test TC33.')
 
     await addTag(page, 'romance')
@@ -159,7 +159,7 @@ test.describe('Wattpad – Tuỳ chỉnh truyện (TC29–TC34)', () => {
     console.log('⏳ TC34: Thêm tag trùng lặp...')
 
     await goToNewStoryPage(page)
-    await fillTitle(page, 'TC34 – Test tag trùng lặp')
+    await fillTitle(page, 'TC34 - Test tag trùng lặp')
     await fillDescription(page, 'Mô tả test TC34.')
 
     await addTag(page, 'romance')
@@ -182,7 +182,7 @@ test.describe('Wattpad – Tuỳ chỉnh truyện (TC29–TC34)', () => {
     console.log('TC35: Thêm nhiều tag vượt giới hạn...')
 
     await goToNewStoryPage(page)
-    await fillTitle(page, 'TC35 – Test quá nhiều tags')
+    await fillTitle(page, 'TC35 - Test quá nhiều tags')
     await fillDescription(page, 'Mô tả test TC35.')
 
     let previousCount = 0

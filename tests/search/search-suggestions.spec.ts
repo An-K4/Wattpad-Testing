@@ -5,6 +5,7 @@ test.describe('Wattpad Search Suggestions (TC16-TC18)', () => {
 
   test.beforeEach(async ({ page }) => {
     await goToHomePage(page)
+    await page.waitForTimeout(2000)
   })
 
   test('TC16 - Gõ vào ô tìm kiếm → hiển thị dropdown gợi ý', async ({ page }) => {

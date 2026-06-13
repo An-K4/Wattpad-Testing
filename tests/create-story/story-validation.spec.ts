@@ -12,7 +12,7 @@ import {
   // deleteStory,
 } from '../helpers/story-helper.js'
 
-test.describe('Wattpad – Tạo truyện mới (TC19–TC28)', () => {
+test.describe('Wattpad - Tạo truyện mới (TC19-TC28)', () => {
 
   test.describe.configure({ mode: 'serial' })
   test.setTimeout(90000)
@@ -22,7 +22,7 @@ test.describe('Wattpad – Tạo truyện mới (TC19–TC28)', () => {
     console.log('TC19: Tạo truyện với đầy đủ thông tin...')
 
     await goToNewStoryPage(page)
-    await fillTitle(page, 'Automation Test Story – TC19')
+    await fillTitle(page, 'Automation Test Story - TC19')
     await fillDescription(page, 'Mô tả tự động tạo bởi Playwright để kiểm thử TC19.')
     await selectLanguage(page, '19') // Tiếng Việt
     await selectStoryType(page, 'Fiction')
@@ -64,7 +64,7 @@ test.describe('Wattpad – Tạo truyện mới (TC19–TC28)', () => {
     console.log('TC21: Submit form với tiêu đề trống...')
 
     await goToNewStoryPage(page)
-    await fillDescription(page, 'Mô tả test TC21 – bỏ trống tiêu đề.')
+    await fillDescription(page, 'Mô tả test TC21 - bỏ trống tiêu đề.')
 
     const url = await submitStoryForm(page)
     console.log(`TC21: URL sau submit → ${url}`)
@@ -78,7 +78,7 @@ test.describe('Wattpad – Tạo truyện mới (TC19–TC28)', () => {
     console.log('TC22: Submit form với mô tả trống...')
 
     await goToNewStoryPage(page)
-    await fillTitle(page, 'TC22 – Test bỏ trống mô tả')
+    await fillTitle(page, 'TC22 - Test bỏ trống mô tả')
 
     const url = await submitStoryForm(page)
     console.log(`TC22: URL sau submit → ${url}`)
@@ -92,7 +92,7 @@ test.describe('Wattpad – Tạo truyện mới (TC19–TC28)', () => {
     console.log('TC23: Submit form không chọn Story type...')
 
     await goToNewStoryPage(page)
-    await fillTitle(page, 'TC23 – Test không chọn story type')
+    await fillTitle(page, 'TC23 - Test không chọn story type')
     await fillDescription(page, 'Mô tả test TC23.')
 
     const url = await submitStoryForm(page)
@@ -111,7 +111,7 @@ test.describe('Wattpad – Tạo truyện mới (TC19–TC28)', () => {
     const defaultLang = await page.locator('select#story-language').inputValue()
     console.log(`TC24: Language mặc định = "${defaultLang}" (1 = English)`)
 
-    await fillTitle(page, 'TC24 – Test ngôn ngữ mặc định')
+    await fillTitle(page, 'TC24 - Test ngôn ngữ mặc định')
     await fillDescription(page, 'Mô tả test TC24.')
 
     const url = await submitStoryForm(page)
@@ -158,7 +158,7 @@ test.describe('Wattpad – Tạo truyện mới (TC19–TC28)', () => {
     console.log('TC27: Nhập mô tả 5000 ký tự (maxlength=2000)...')
 
     await goToNewStoryPage(page)
-    await fillTitle(page, 'TC27 – Test mô tả quá dài')
+    await fillTitle(page, 'TC27 - Test mô tả quá dài')
 
     const longDesc = 'B'.repeat(5000)
     await fillDescription(page, longDesc)

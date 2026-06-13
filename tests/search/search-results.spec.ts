@@ -1,11 +1,11 @@
 import { test, expect } from '@playwright/test'
 import { goToSearchPage, countStoryCards } from '../helpers/search-helper.js'
 
-test.describe('Wattpad Search Results Suite (TC08–TC15)', () => {
+test.describe('Wattpad Search Results Suite (TC08-TC15)', () => {
   test.setTimeout(60000)
 
   // ──────────────────────────────────────────────────────────────────────────
-  // TC08 – Kết quả hiển thị đúng thông tin (tên truyện, ảnh bìa)
+  // TC08 - Kết quả hiển thị đúng thông tin (tên truyện, ảnh bìa)
   // ──────────────────────────────────────────────────────────────────────────
   test('TC08 - Kết quả hiển thị đúng thông tin', async ({ page }) => {
     console.log('TC08: Kiểm tra thông tin hiển thị trên kết quả...')
@@ -21,7 +21,7 @@ test.describe('Wattpad Search Results Suite (TC08–TC15)', () => {
     const titleText = await titleEl.textContent()
     expect(titleText?.trim().length).toBeGreaterThan(0)
 
-    // Ảnh bìa – lấy src (không check visible vì bản desktop bị hidden-xxs)
+    // Ảnh bìa - lấy src (không check visible vì bản desktop bị hidden-xxs)
     const src = await firstCard.locator('img').first().getAttribute('src')
     expect(src).toBeTruthy()
     expect(src).toMatch(/wattpad\.com/)
@@ -30,7 +30,7 @@ test.describe('Wattpad Search Results Suite (TC08–TC15)', () => {
   })
 
   // ──────────────────────────────────────────────────────────────────────────
-  // TC09 – Click vào kết quả → chuyển đúng trang truyện
+  // TC09 - Click vào kết quả → chuyển đúng trang truyện
   // ──────────────────────────────────────────────────────────────────────────
   test('TC09 - Click vào kết quả chuyển đúng trang', async ({ page }) => {
     console.log('TC09: Click vào kết quả tìm kiếm...')
@@ -50,7 +50,7 @@ test.describe('Wattpad Search Results Suite (TC08–TC15)', () => {
   })
 
   // ──────────────────────────────────────────────────────────────────────────
-  // TC10 – Phân trang / load thêm (infinite scroll + nút Load more)
+  // TC10 - Phân trang / load thêm (infinite scroll + nút Load more)
   // ──────────────────────────────────────────────────────────────────────────
   test('TC10 - Kết quả có thể phân trang hoặc load thêm', async ({ page }) => {
     console.log('TC10: Kiểm tra phân trang / load thêm...')
@@ -84,12 +84,12 @@ test.describe('Wattpad Search Results Suite (TC08–TC15)', () => {
   })
 
   // ──────────────────────────────────────────────────────────────────────────
-  // TC11 – Lọc theo độ dài truyện (1–10 chương)
+  // TC11 - Lọc theo độ dài truyện (1-10 chương)
   // Kiểm tra tất cả card phải có tag "Hoàn thành" (không có "Đang sáng tác")
   // ──────────────────────────────────────────────────────────────────────────
   test('TC11 - Lọc kết quả theo độ dài truyện', async ({ page }) => {
     test.setTimeout(90000)
-    console.log('TC11: Kiểm tra lọc theo độ dài 1–10 chương...')
+    console.log('TC11: Kiểm tra lọc theo độ dài 1-10 chương...')
     await goToSearchPage(page)
 
     // Đợi API gọi hoặc UI cập nhật
@@ -143,16 +143,16 @@ test.describe('Wattpad Search Results Suite (TC08–TC15)', () => {
       console.log(`Card ${i + 1}: ${chapterCount} chương`)
       if (chapterCount > 0 && (chapterCount < 1 || chapterCount > 10)) {
         failCount++
-        console.log(`Card ${i + 1}: ${chapterCount} chương (ngoài range 1–10)`)
+        console.log(`Card ${i + 1}: ${chapterCount} chương (ngoài range 1-10)`)
       }
     }
 
     expect(failCount).toBe(0)
-    console.log(`TC11: ${cardCount} card, tất cả trong range 1–10 chương.`)
+    console.log(`TC11: ${cardCount} card, tất cả trong range 1-10 chương.`)
   })
 
   // ──────────────────────────────────────────────────────────────────────────
-  // TC12 – Lọc theo thời gian cập nhật (Hôm nay)
+  // TC12 - Lọc theo thời gian cập nhật (Hôm nay)
   // Vào trang truyện → kiểm tra aria-label chứa ngày hôm nay
   // ──────────────────────────────────────────────────────────────────────────
   test('TC12 - Lọc kết quả theo thời gian cập nhật hôm nay', async ({ page }) => {
@@ -204,7 +204,7 @@ test.describe('Wattpad Search Results Suite (TC08–TC15)', () => {
   })
 
   // ──────────────────────────────────────────────────────────────────────────
-  // TC13 – Lọc theo nội dung (chỉ hiển thị truyện đã hoàn thành)
+  // TC13 - Lọc theo nội dung (chỉ hiển thị truyện đã hoàn thành)
   // Tất cả card không được có tag "Đang sáng tác"
   // ──────────────────────────────────────────────────────────────────────────
   test('TC13 - Lọc kết quả theo nội dung (chỉ hoàn thành)', async ({ page }) => {
@@ -270,7 +270,7 @@ test.describe('Wattpad Search Results Suite (TC08–TC15)', () => {
   })
 
   // ──────────────────────────────────────────────────────────────────────────
-  // TC14 – Lọc theo tag
+  // TC14 - Lọc theo tag
   // Click tag trong .tag-filter-container → vào truyện → kiểm tra tag có trong danh sách
   // ──────────────────────────────────────────────────────────────────────────
   test('TC14 - Lọc kết quả theo tag', async ({ page }) => {
@@ -312,7 +312,7 @@ test.describe('Wattpad Search Results Suite (TC08–TC15)', () => {
   })
 
   // ──────────────────────────────────────────────────────────────────────────
-  // TC15 – Kết quả hiển thị cả Stories lẫn Users (2 tab)
+  // TC15 - Kết quả hiển thị cả Stories lẫn Users (2 tab)
   // ──────────────────────────────────────────────────────────────────────────
   test('TC15 - Kết quả hiển thị cả Stories lẫn Users', async ({ page }) => {
     console.log('TC15: Kiểm tra 2 tab Stories & Users...')

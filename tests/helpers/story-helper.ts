@@ -11,6 +11,7 @@ export async function goToNewStoryPage(page: Page) {
     waitUntil: 'domcontentloaded'
   })
   await page.locator('input#title').waitFor({ state: 'visible', timeout: 20000 })
+  await page.waitForTimeout(2000)
 }
 
 /**
@@ -119,7 +120,7 @@ export async function uploadCover(page: Page, filePath: string) {
   console.log('Bắt đầu upload...')
 
   // Dispatch click event vào nút Add a cover
-  await page.locator('button._3jpO-.transparent-button').dispatchEvent('click')
+  await page.locator('button._3jpO-.transparent-button, body > form > main > section.dkgE- > div > div.By3pD > div > button').dispatchEvent('click')
   console.log('Đã dispatch click vào Add a cover')
 
   await page.waitForTimeout(1000)
@@ -232,7 +233,7 @@ export async function getTagInputValue(page: Page): Promise<string> {
 
 export async function handleCreateSeriesTooltip(page: Page) {
   try {
-    const gotItButton = page.locator('.tooltip-content .confirm-button:has-text("Got it")')
+    const gotItButton = page.locator('.tooltip-content .confirm-button:has-text("Got it"), .confirm-button:has-text("Đã hiểu")').first()
     const isVisible = await gotItButton.isVisible({ timeout: 3000 })
 
     if (isVisible) {
@@ -264,7 +265,7 @@ export async function deleteStory(page: Page, storyId: string) {
     await page.waitForTimeout(500)
 
     // Xử lý dialog xác nhận
-    const confirmBtn = page.locator('#delete-story-modal .btn-red:has-text("Yes, delete my story")')
+    const confirmBtn = page.locator('#delete-story-modal .btn-red:has-text("Yes, delete my story"), #delete-story-modal .btn-red:has-text("Vâng, xóa truyện của tôi")')
     if (await confirmBtn.isVisible({ timeout: 3000 }).catch(() => false)) {
       await confirmBtn.click()
       console.log('Đã click confirm delete')

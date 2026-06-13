@@ -5,7 +5,7 @@ export default defineConfig({
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 3 : 2,
-  ...(process.env.CI ? { workers: 1 } : {}),
+  workers: 1,
   timeout: 120000,
   reporter: 'html',
   use: {
@@ -19,7 +19,7 @@ export default defineConfig({
       name: 'chromium',
       use: {
         ...devices['Desktop Chrome'],
-        viewport: { width: 1920, height: 1080 },
+        viewport: { width: 1920, height: 1080 }
       }
     }
     // {
