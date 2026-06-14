@@ -41,7 +41,7 @@ test.describe('Wattpad Story Management (TC38-TC41)', () => {
     await handleCreateSeriesTooltip(page)
 
     // Click vào all stories filter
-    await page.locator('#works-content > div.metadata > ul > li:nth-child(2) > span').first().click()
+    await page.locator('#works-content > div.metadata > ul > li > span:has-text("All Stories")').first().click()
 
     // Tìm truyện vừa tạo trong danh sách
     const storyCard = page.locator('.story-wrapper', { hasText: storyTitle })
@@ -100,7 +100,7 @@ test.describe('Wattpad Story Management (TC38-TC41)', () => {
     await handleCreateSeriesTooltip(page)
 
     // Click vào all stories filter
-    await page.locator('#works-content > div.metadata > ul > li:nth-child(2) > span').first().click()
+    await page.locator('#works-content > div.metadata > ul > li > span:has-text("All Stories")').first().click()
 
     // Click vào tên truyện
     const storyLink = page.locator('.story-title a', { hasText: String(timestamp) }).first()
@@ -177,7 +177,7 @@ test.describe('Wattpad Story Management (TC38-TC41)', () => {
     await handleCreateSeriesTooltip(page)
 
     // Click vào all stories filter
-    await page.locator('#works-content > div.metadata > ul > li:nth-child(2) > span').first().click()
+    await page.locator('#works-content > div.metadata > ul > li > span:has-text("All Stories")').first().click()
 
     // Click vào tên truyện
     const storyLink = page.locator('.story-title a', { hasText: String(timestamp) }).first()
@@ -274,7 +274,7 @@ test.describe('Wattpad Story Management (TC38-TC41)', () => {
     await handleCreateSeriesTooltip(page)
 
     // Click vào all stories filter
-    await page.locator('#works-content > div.metadata > ul > li:nth-child(2) > span').first().click()
+    await page.locator('#works-content > div.metadata > ul > li > span:has-text("All Stories")').first().click()
 
     // Tìm truyện với timestamp vừa sửa
     const updatedStoryLink = page.locator('.story-title a', { hasText: String(newTimestamp) }).first()
@@ -361,7 +361,7 @@ test.describe('Wattpad Story Management (TC38-TC41)', () => {
     await handleCreateSeriesTooltip(page)
 
     // Click vào all stories filter
-    await page.locator('#works-content > div.metadata > ul > li:nth-child(2) > span').first().click()
+    await page.locator('#works-content > div.metadata > ul > li > span:has-text("All Stories")').first().click()
 
     // Tìm card có title chứa timestamp
     const storyCard = page.locator('.works-item-new', { hasText: String(timestamp) }).first()
