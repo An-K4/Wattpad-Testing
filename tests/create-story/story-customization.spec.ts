@@ -17,7 +17,7 @@ import {
 
 test.describe('Wattpad - Tuỳ chỉnh truyện (TC29-TC34)', () => {
 
-  test.describe.configure({ mode: 'serial' })
+  // test.describe.configure({ mode: 'serial' })
   test.setTimeout(90000)
 
   // ── TC29 ─────────────────────────────────────────────────────────────────
@@ -86,24 +86,16 @@ test.describe('Wattpad - Tuỳ chỉnh truyện (TC29-TC34)', () => {
   test('TC31 - Upload ảnh bìa quá dung lượng (100MB) → trang bị treo/crash khi lưu', async ({ page }) => {
     console.log('TC31: Upload ảnh bìa 100MB...')
 
-    // Test này document một BUG đã biết: trang bị crash/đứng khi save với ảnh quá lớn.
-    // Đánh dấu expected fail để không làm đỏ toàn bộ suite, nhưng vẫn hiện rõ trong report.
-    test.fail()
-
     await goToNewStoryPage(page)
     await uploadCover(page, 'tests/fixtures/large-image.jpg')
 
     await fillTitle(page, 'TC31 - Test cover quá dung lượng')
     await fillDescription(page, 'Mô tả test TC31.')
 
-    // Bấm Save & chỉ đợi tối đa 30s. Nếu Wattpad xử lý đúng (báo lỗi dung lượng /
-    // không cho upload) thì redirect hoặc thông báo lỗi sẽ xuất hiện sớm.
-    // Nếu trang bị treo (bug thực tế), waitForURL sẽ timeout → test fail (đúng như mong đợi).
-    const saveBtn = page.locator('header button:has-text("Save")').first()
-    await saveBtn.click({ force: true })
+    const url = await submitStoryForm(page)
+    console.log(`TC31: URL sau submit → ${url}`)
 
-    await page.waitForURL(/\/myworks\/\d+\/write\/\d+/, { timeout: 30000 })
-
+    expect(isWriterPage(url)).toBe(true)
     console.log('TC31: Wattpad xử lý được ảnh lớn mà không crash (bug đã fix?).')
   })
 
