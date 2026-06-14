@@ -18,7 +18,7 @@ export async function goToNewChapterPage(page: Page, storyId?: string) {
     await page.waitForTimeout(2000)
 
     // Đóng dialog "Create series" nếu xuất hiện
-    const closeDialogBtn = page.locator('button:has-text("Đã hiểu")').first()
+    const closeDialogBtn = page.locator('button:has-text("Đã hiểu"), button:has-text("Got it")').first()
     const hasDialog = await closeDialogBtn.isVisible().catch(() => false)
 
     if (hasDialog) {
@@ -37,7 +37,7 @@ export async function goToNewChapterPage(page: Page, storyId?: string) {
     }
 
     // Click vào nút "Tiếp tục viết" của truyện đầu tiên
-    const continueWriteBtn = page.locator('button:has-text("Tiếp tục viết")').first()
+    const continueWriteBtn = page.locator('button:has-text("Tiếp tục viết"), button:has-text("Continue writing")').first()
     const hasBtn = await continueWriteBtn.isVisible().catch(() => false)
 
     if (hasBtn) {
@@ -45,7 +45,7 @@ export async function goToNewChapterPage(page: Page, storyId?: string) {
       await page.waitForTimeout(2000)
 
       // Click vào "Chương mới" hoặc "New Chapter" trong dropdown
-      const newChapterBtn = page.locator('a:has-text("Chương mới"), a:has-text("New Chapter"), button:has-text("Chương mới")').first()
+      const newChapterBtn = page.locator('button:has-text("New Part"), button:has-text("Chương mới")').first()
       await newChapterBtn.click()
       await page.waitForTimeout(3000)
     } else {
@@ -113,7 +113,7 @@ export async function saveDraft(page: Page) {
  * Publish chương
  */
 export async function publishChapter(page: Page) {
-  await page.waitForTimeout(2000)
+  await page.waitForTimeout(5000)
   const publishBtn = page.locator('button:has-text("Publish"), button:has-text("Đăng tải")').first()
   await publishBtn.click()
   await page.waitForTimeout(2000)

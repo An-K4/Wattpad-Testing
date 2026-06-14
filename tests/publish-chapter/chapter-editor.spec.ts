@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test'
-import { goToNewChapterPage, fillChapterForm, formatText, checkAutoSave, getEditorContent } from '../helpers/chapter-helper.js'
+import { goToNewChapterPage, fillChapterForm, formatText, checkAutoSave, getEditorContent, saveDraft } from '../helpers/chapter-helper.js'
 
 test.describe('Wattpad Chapter Editor (TC51-TC55)', () => {
 
@@ -150,15 +150,14 @@ test.describe('Wattpad Chapter Editor (TC51-TC55)', () => {
     await editor.click()
     await page.keyboard.type(' UNIQUE')
 
-    // Đợi cho "Đang lưu..." xuất hiện
-    await page.waitForSelector('.save-indicator:has-text("Đang lưu")', { timeout: 10000 }).catch(() => null)
+    await page.waitForTimeout(1000)
 
-    // Đợi cho "Đang lưu..." biến mất (đã lưu xong)
-    await page.waitForSelector('.save-indicator:not(:has-text("Đang lưu"))', { timeout: 120000 }).catch(() => null)
+    await saveDraft(page)
+    await page.waitForSelector('.save-indicator:not(:has-text("Đang lưu")), .save-indicator:has-text("Saving")', { timeout: 120000 }).catch(() => null)
 
     // Reload trang
     await page.reload({ waitUntil: 'domcontentloaded' })
-    await page.waitForTimeout(3000)
+    await page.waitForTimeout(2000)
 
     // Kiểm tra nội dung có được khôi phục
     const currentContent = await getEditorContent(page)

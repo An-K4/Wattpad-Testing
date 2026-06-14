@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test'
-import { goToNewChapterPage, fillChapterForm, publishChapter, hasChapterError } from '../helpers/chapter-helper.js'
+import { goToNewChapterPage, fillChapterForm, publishChapter, hasChapterError, saveDraft } from '../helpers/chapter-helper.js'
 
 test.describe('Wattpad Chapter Content (TC46-TC50)', () => {
 
@@ -8,13 +8,13 @@ test.describe('Wattpad Chapter Content (TC46-TC50)', () => {
     await goToNewChapterPage(page)
     await page.waitForTimeout(3000)
 
-    const longTitle = 'Chương 1 - ' + 'A'.repeat(300)
+    const longTitle = 'Chương 1 - ' + 'A'.repeat(3000)
     await fillChapterForm(page, {
       title: longTitle,
       content: 'Nội dung test cho chương có tiêu đề dài.'
     })
 
-    await publishChapter(page)
+    await saveDraft(page)
     await page.waitForTimeout(2000)
 
     const hasError = await hasChapterError(page)

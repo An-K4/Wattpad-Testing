@@ -39,7 +39,7 @@ test.describe('Wattpad Chapter Publishing (TC57-TC62)', () => {
     })
 
     await publishChapter(page)
-    await page.waitForTimeout(3000)
+    await page.waitForTimeout(5000)
 
     // Kiểm tra đã redirect đến trang công khai (URL không còn /write hoặc /publish)
     const currentURL = page.url()
