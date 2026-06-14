@@ -1,10 +1,10 @@
 import { test, expect } from '@playwright/test'
 import { goToNewChapterPage, fillChapterForm, saveDraft, publishChapter, schedulePublishChapter, goToMyWorks, editPublishedChapter, publishChanges } from '../helpers/chapter-helper.js'
 
-test.describe('Wattpad Chapter Publishing (TC57-TC62)', () => {
+test.describe('Wattpad Chapter Publishing (TC55-TC60)', () => {
 
-  test('TC57 - Lưu chương dưới dạng Draft → chưa hiển thị công khai', async ({ page }) => {
-    console.log(' Đang chạy TC57: Lưu chương dưới dạng Draft...')
+  test('TC55 - Lưu chương dưới dạng Draft → chưa hiển thị công khai', async ({ page }) => {
+    console.log(' Đang chạy TC55: Lưu chương dưới dạng Draft...')
     await goToNewChapterPage(page)
     await page.waitForTimeout(3000)
 
@@ -25,11 +25,11 @@ test.describe('Wattpad Chapter Publishing (TC57-TC62)', () => {
     const editorVisible = await page.locator('.story-editor').isVisible().catch(() => false)
     expect(editorVisible).toBe(true)
 
-    console.log('TC57: Hoàn thành - Đã lưu draft thành công')
+    console.log('TC55: Hoàn thành - Đã lưu draft thành công')
   })
 
-  test('TC58 - Publish chương → hiển thị công khai cho người đọc', async ({ page }) => {
-    console.log(' Đang chạy TC58: Publish chương...')
+  test('TC56 - Publish chương → hiển thị công khai cho người đọc', async ({ page }) => {
+    console.log(' Đang chạy TC56: Publish chương...')
     await goToNewChapterPage(page)
     await page.waitForTimeout(3000)
 
@@ -46,11 +46,11 @@ test.describe('Wattpad Chapter Publishing (TC57-TC62)', () => {
     const isPublicPage = !currentURL.includes('/write') && !currentURL.includes('/publish')
 
     expect(isPublicPage).toBe(true)
-    console.log(' TC58: Hoàn thành - Publish thành công, đã chuyển đến trang công khai.')
+    console.log(' TC56: Hoàn thành - Publish thành công, đã chuyển đến trang công khai.')
   })
 
-  test('TC59 - Đặt lịch publish chương vào thời điểm trong tương lai', async ({ page }) => {
-    console.log(' Đang chạy TC59: Đặt lịch publish...')
+  test('TC57 - Đặt lịch publish chương vào thời điểm trong tương lai', async ({ page }) => {
+    console.log(' Đang chạy TC57: Đặt lịch publish...')
     await goToNewChapterPage(page)
     await page.waitForTimeout(3000)
 
@@ -67,11 +67,11 @@ test.describe('Wattpad Chapter Publishing (TC57-TC62)', () => {
     const hasSuccessModal = await successModal.isVisible().catch(() => false)
 
     expect(hasSuccessModal).toBe(true)
-    console.log(' TC59: Hoàn thành - Đã đặt lịch publish thành công.')
+    console.log(' TC57: Hoàn thành - Đã đặt lịch publish thành công.')
   })
 
-  test('TC60 - Chỉnh sửa chương đã publish → cập nhật đúng nội dung', async ({ page }) => {
-    console.log('Đang chạy TC60: Chỉnh sửa chương đã publish...')
+  test('TC58 - Chỉnh sửa chương đã publish → cập nhật đúng nội dung', async ({ page }) => {
+    console.log('Đang chạy TC58: Chỉnh sửa chương đã publish...')
 
     await goToMyWorks(page)
     await editPublishedChapter(page)
@@ -92,11 +92,11 @@ test.describe('Wattpad Chapter Publishing (TC57-TC62)', () => {
     const isPublicPage = !currentURL.includes('/write') && !currentURL.includes('/publish')
 
     expect(isPublicPage).toBe(true)
-    console.log('TC60: Hoàn thành - Đã chỉnh sửa và đăng lại chương thành công.')
+    console.log('TC58: Hoàn thành - Đã chỉnh sửa và đăng lại chương thành công.')
   })
 
-  test('TC61 - Xoá chương đã publish → không còn hiển thị', async ({ page }) => {
-    console.log('Đang chạy TC61: Xóa chương đã publish...')
+  test('TC59 - Xoá chương đã publish → không còn hiển thị', async ({ page }) => {
+    console.log('Đang chạy TC59: Xóa chương đã publish...')
 
     await goToMyWorks(page)
     await editPublishedChapter(page)
@@ -125,7 +125,7 @@ test.describe('Wattpad Chapter Publishing (TC57-TC62)', () => {
     const isTableOfContents = currentURL.includes('/myworks/') && !currentURL.includes('/write')
 
     expect(isTableOfContents).toBe(true)
-    console.log('TC61: Hoàn thành - Đã xóa chương và quay về trang danh sách chương.')
+    console.log('TC59: Hoàn thành - Đã xóa chương và quay về trang danh sách chương.')
   })
 
 })

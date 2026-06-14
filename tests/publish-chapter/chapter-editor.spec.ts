@@ -1,10 +1,10 @@
 import { test, expect } from '@playwright/test'
 import { goToNewChapterPage, fillChapterForm, formatText, checkAutoSave, getEditorContent, saveDraft } from '../helpers/chapter-helper.js'
 
-test.describe('Wattpad Chapter Editor (TC51-TC55)', () => {
+test.describe('Wattpad Chapter Editor (TC49-TC54)', () => {
 
-  test('TC51 - In đậm (Bold) hoạt động đúng', async ({ page }) => {
-    console.log(' Đang chạy TC51: Kiểm tra chức năng Bold...')
+  test('TC49 - In đậm (Bold) hoạt động đúng', async ({ page }) => {
+    console.log(' Đang chạy TC49: Kiểm tra chức năng Bold...')
     await goToNewChapterPage(page)
     await page.waitForTimeout(3000)
 
@@ -27,8 +27,8 @@ test.describe('Wattpad Chapter Editor (TC51-TC55)', () => {
 
   })
 
-  test('TC52 - In nghiêng (Italic) hoạt động đúng', async ({ page }) => {
-    console.log(' Đang chạy TC52: Kiểm tra chức năng Italic...')
+  test('TC50 - In nghiêng (Italic) hoạt động đúng', async ({ page }) => {
+    console.log(' Đang chạy TC50: Kiểm tra chức năng Italic...')
     await goToNewChapterPage(page)
     await page.waitForTimeout(3000)
 
@@ -48,8 +48,8 @@ test.describe('Wattpad Chapter Editor (TC51-TC55)', () => {
     expect(await italicText.isVisible()).toBe(true)
   })
 
-  test('TC53 - Gạch chân (Underline) hoạt động đúng', async ({ page }) => {
-    console.log(' Đang chạy TC53: Kiểm tra chức năng Underline...')
+  test('TC51 - Gạch chân (Underline) hoạt động đúng', async ({ page }) => {
+    console.log(' Đang chạy TC51: Kiểm tra chức năng Underline...')
     await goToNewChapterPage(page)
     await page.waitForTimeout(3000)
 
@@ -69,8 +69,8 @@ test.describe('Wattpad Chapter Editor (TC51-TC55)', () => {
     expect(await underlineText.isVisible()).toBe(true)
   })
 
-  test('TC54 - Căn lề (trái/giữa/phải) hoạt động đúng', async ({ page }) => {
-    console.log(' Đang chạy TC54: Kiểm tra căn lề...')
+  test('TC52 - Căn lề (trái/giữa/phải) hoạt động đúng', async ({ page }) => {
+    console.log(' Đang chạy TC52: Kiểm tra căn lề...')
     await goToNewChapterPage(page)
     await page.waitForTimeout(3000)
 
@@ -105,11 +105,11 @@ test.describe('Wattpad Chapter Editor (TC51-TC55)', () => {
     style = await paragraph.getAttribute('style')
     expect(style).toContain('text-align: left')
 
-    console.log(' TC54: Hoàn thành - Các chức năng căn lề hoạt động đúng.')
+    console.log(' TC52: Hoàn thành - Các chức năng căn lề hoạt động đúng.')
   })
 
-  test('TC55 - Auto-save khi đang soạn thảo', async ({ page }) => {
-    console.log(' Đang chạy TC55: Kiểm tra auto-save...')
+  test('TC53 - Auto-save khi đang soạn thảo', async ({ page }) => {
+    console.log(' Đang chạy TC53: Kiểm tra auto-save...')
     await goToNewChapterPage(page)
     await page.waitForTimeout(3000)
 
@@ -131,11 +131,11 @@ test.describe('Wattpad Chapter Editor (TC51-TC55)', () => {
 
     const isSaved = await checkAutoSave(page)
     expect(isSaved).toBe(true)
-    console.log(' TC55: Hoàn thành - Auto-save đã hoạt động.')
+    console.log(' TC53: Hoàn thành - Auto-save đã hoạt động.')
   })
 
-  test('TC56 - Khôi phục bản nháp khi thoát ra rồi vào lại', async ({ page }) => {
-    console.log(' Đang chạy TC56: Kiểm tra khôi phục draft...')
+  test('TC54 - Khôi phục bản nháp khi thoát ra rồi vào lại', async ({ page }) => {
+    console.log(' Đang chạy TC54: Kiểm tra khôi phục draft...')
     await goToNewChapterPage(page)
     await page.waitForTimeout(3000)
 
@@ -164,7 +164,7 @@ test.describe('Wattpad Chapter Editor (TC51-TC55)', () => {
     const hasRestoredContent = currentContent.includes('UNIQUE') && currentContent.includes('draft')
 
     expect(hasRestoredContent).toBe(true)
-    console.log(' TC56: Hoàn thành - Draft được khôi phục thành công.')
+    console.log(' TC54: Hoàn thành - Draft được khôi phục thành công.')
   })
 
 })

@@ -1,15 +1,15 @@
 import { test, expect } from '@playwright/test'
 import { goToNewChapterPage, fillChapterForm, publishChapter, hasChapterError } from '../helpers/chapter-helper.js'
 
-test.describe('Wattpad Chapter Validation (TC42-TC45)', () => {
+test.describe('Wattpad Chapter Validation (TC40-TC43)', () => {
 
-  test('TC42 - Đăng chương thành công với đầy đủ thông tin', async ({ page }) => {
-    console.log(' Đang chạy TC42: Đăng chương với thông tin đầy đủ...')
+  test('TC40 - Đăng chương thành công với đầy đủ thông tin', async ({ page }) => {
+    console.log(' Đang chạy TC40: Đăng chương với thông tin đầy đủ...')
     await goToNewChapterPage(page)
     await page.waitForTimeout(3000)
 
     await fillChapterForm(page, {
-      title: 'Chương 1 - Khởi đầu - TC42',
+      title: 'Chương 1 - Khởi đầu - TC40',
       content: 'Đây là nội dung chương đầu tiên của truyện. Nội dung test đầy đủ với nhiều câu văn để đảm bảo vượt qua giới hạn tối thiểu.'
     })
 
@@ -18,11 +18,11 @@ test.describe('Wattpad Chapter Validation (TC42-TC45)', () => {
 
     const hasError = await hasChapterError(page)
     expect(hasError).toBe(false)
-    console.log(' TC42: Hoàn thành - Đăng chương thành công.')
+    console.log(' TC40: Hoàn thành - Đăng chương thành công.')
   })
 
-  test('TC43 - Đăng chương trống không → tự động tạo tiêu đề mặc định', async ({ page }) => {
-    console.log(' Đang chạy TC43: Đăng chương trống...')
+  test('TC41 - Đăng chương trống không → tự động tạo tiêu đề mặc định', async ({ page }) => {
+    console.log(' Đang chạy TC41: Đăng chương trống...')
     await goToNewChapterPage(page)
     await page.waitForTimeout(3000)
 
@@ -38,17 +38,17 @@ test.describe('Wattpad Chapter Validation (TC42-TC45)', () => {
     const defaultTitle = page.locator(':has-text("Untitled"), :has-text("Chưa đặt tiêu đề"), :has-text("untitled")').first()
     const hasDefaultTitle = await defaultTitle.isVisible().catch(() => false)
 
-    console.log(` TC43: Hoàn thành - ${hasDefaultTitle ? 'Tạo tiêu đề mặc định' : 'Đã publish'}.`)
+    console.log(` TC41: Hoàn thành - ${hasDefaultTitle ? 'Tạo tiêu đề mặc định' : 'Đã publish'}.`)
   })
 
-  test('TC44 - Bỏ trống tiêu đề chương → tự động tạo tiêu đề mặc định', async ({ page }) => {
-    console.log(' Đang chạy TC44: Bỏ trống tiêu đề chương...')
+  test('TC42 - Bỏ trống tiêu đề chương → tự động tạo tiêu đề mặc định', async ({ page }) => {
+    console.log(' Đang chạy TC42: Bỏ trống tiêu đề chương...')
     await goToNewChapterPage(page)
     await page.waitForTimeout(3000)
 
     await fillChapterForm(page, {
       title: '',
-      content: 'Đây là nội dung chương nhưng không có tiêu đề. - TC44'
+      content: 'Đây là nội dung chương nhưng không có tiêu đề. - TC42'
     })
 
     await publishChapter(page)
@@ -58,16 +58,16 @@ test.describe('Wattpad Chapter Validation (TC42-TC45)', () => {
     const defaultTitle = page.locator(':has-text("Untitled"), :has-text("Chưa đặt tiêu đề"), :has-text("untitled")').first()
     const hasDefaultTitle = await defaultTitle.isVisible().catch(() => false)
 
-    console.log(` TC44: Hoàn thành - ${hasDefaultTitle ? 'Tạo tiêu đề mặc định' : 'Đã publish với tiêu đề tự động'}.`)
+    console.log(` TC42: Hoàn thành - ${hasDefaultTitle ? 'Tạo tiêu đề mặc định' : 'Đã publish với tiêu đề tự động'}.`)
   })
 
-  test('TC45 - Bỏ trống nội dung chương → cho phép đăng với nội dung trống', async ({ page }) => {
-    console.log(' Đang chạy TC45: Bỏ trống nội dung chương...')
+  test('TC43 - Bỏ trống nội dung chương → cho phép đăng với nội dung trống', async ({ page }) => {
+    console.log(' Đang chạy TC43: Bỏ trống nội dung chương...')
     await goToNewChapterPage(page)
     await page.waitForTimeout(3000)
 
     await fillChapterForm(page, {
-      title: 'Chương có tiêu đề - TC45',
+      title: 'Chương có tiêu đề - TC43',
       content: ''
     })
 
@@ -77,7 +77,7 @@ test.describe('Wattpad Chapter Validation (TC42-TC45)', () => {
     // Kiểm tra không có lỗi - Wattpad cho phép nội dung trống
     const hasError = await hasChapterError(page)
     expect(hasError).toBe(false)
-    console.log(' TC45: Hoàn thành - Cho phép đăng chương có tiêu đề nhưng không có nội dung.')
+    console.log(' TC43: Hoàn thành - Cho phép đăng chương có tiêu đề nhưng không có nội dung.')
   })
 
 })
